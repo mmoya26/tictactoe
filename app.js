@@ -11,6 +11,8 @@ let playerTwo = Player("John", "O", false)
 
 let Board = (function () {
     let gameBoard = ["","","","","","","","","",];
+    let winner = false;
+    let gameOver = false;
 
     const setUp = () => {
         const tilesContainer = document.querySelector(".tiles_container");
@@ -24,7 +26,8 @@ let Board = (function () {
                     were lost. If the method  retuns false it means that the space was already filled thefore the turn 
                     should not be lost until the player picks and empty tile */
                 if (DisplayController.markTitle(tileElement.id, playerOne.turn ? playerOne : playerTwo)) {
-                    switchTurns(false);
+                    checkWinCondition();
+                    switchTurns(false);       
                 }
                 return;
             })
@@ -50,6 +53,47 @@ let Board = (function () {
 
     const emptyGameBoardArray = () => {
         gameBoard = ["","","","","","","","","",];
+        console.log("gameBoard array is now empty");
+        console.log(gameBoard);
+    }
+
+    const checkWinCondition = () => {
+        let currentPlayer = playerOne.turn ? playerOne : playerTwo;
+        let signCounter = 0;
+
+        const winningSpots = [
+            [0,1,2],
+            [3,4,5],
+            [6,7,8],
+            [0,3,6],
+            [1,4,7],
+            [2,5,8],
+            [0,4,8],
+            [2,4,6], 
+        ];
+
+        winningSpots.forEach(array => {
+            array.forEach(value => {
+                if(!gameOver) {
+                    if (gameBoard[value] === currentPlayer.sign) {
+                        winner = true;
+                        signCounter++;
+                        if( signCounter === 3) {
+                            gameOver = true;
+                            return;
+                        }         
+                    } else {
+                        winner = false
+                        signCounter = 0;
+                    }  
+                }
+            });
+        });
+
+        if(winner) {
+            alert("winner");
+            return;
+        }
     }
 
     return {
@@ -57,7 +101,8 @@ let Board = (function () {
         setUp,
         updateGameBoardArray,
         switchTurns,
-        emptyGameBoardArray
+        emptyGameBoardArray,
+        checkWinCondition,
     }
 
 })(playerOne, playerTwo);

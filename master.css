@@ -69,3 +69,9 @@ button {
 button:hover {
     transform: translate(0, -0.313rem);
 }
+
+#winner {
+    color: #40ca32;
+    text-align: center;
+    margin-top: 1.25rem;
+}

@@ -91,7 +91,7 @@ let Board = (function () {
         });
 
         if(gameOver) {
-            DisplayController.alertWinner(currentPlayer);
+            DisplayController.displayWinner(currentPlayer);
             return;
         }
     }
@@ -134,21 +134,31 @@ let DisplayController = (function () {
             tile.textContent = "";
         });
     }
+    
+    const removeWinnerHeading = () => {
+        let winnerHeader = document.getElementById("winner");
+        document.body.removeChild(winnerHeader);
+    }
 
-    const alertWinner = (player) => {
-        alert(`The winner is: ${player.name} Sign: ${player.sign}`);
+    const displayWinner = (player) => {
+        let winnerHeader = document.createElement("h3");
+        winnerHeader.id = "winner";
+        winnerHeader.textContent = `Winner: ${player.name}`;
+        document.body.appendChild(winnerHeader);
     }
 
     return {
         markTitle,
         clearBoard,
-        alertWinner
+        displayWinner,
+        removeWinnerHeading
     }
 })();
 
 const clearButton = document.getElementById('clear');
 clearButton.addEventListener("click", () => {
     DisplayController.clearBoard();
+    DisplayController.removeWinnerHeading();
     Board.resetGame();
 })
 

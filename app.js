@@ -20,8 +20,13 @@ let Board = (function () {
             tileElement.classList.add("tile");
             tileElement.id = i;
             tileElement.addEventListener("click", () => {
-                DisplayController.markTitle(tileElement.id, playerOne.turn ? playerOne : playerTwo);
-                switchTurns();
+                /* If this method returns true it means that the correct sign was placed on the board and no turns
+                    were lost. If the method  retuns false it means that the space was already filled thefore the turn 
+                    should not be lost until the player picks and empty tile */
+                if (DisplayController.markTitle(tileElement.id, playerOne.turn ? playerOne : playerTwo)) {
+                    switchTurns();
+                }
+                return;
             })
             tilesContainer.appendChild(tileElement)
         }
@@ -58,10 +63,11 @@ let DisplayController = (function () {
 
         if (temporaryTitle.textContent !== "") {
             console.log("Already filled");
-            return;
+            return false;
         } else {
             temporaryTitle.textContent = player.sign;
             Board.updateGameBoardArray(temporaryTitle.id, player.sign);
+            return true;
         }
     }
 

@@ -24,7 +24,7 @@ let Board = (function () {
                     were lost. If the method  retuns false it means that the space was already filled thefore the turn 
                     should not be lost until the player picks and empty tile */
                 if (DisplayController.markTitle(tileElement.id, playerOne.turn ? playerOne : playerTwo)) {
-                    switchTurns();
+                    switchTurns(false);
                 }
                 return;
             })
@@ -38,16 +38,14 @@ let Board = (function () {
         console.log(gameBoard);
     }
 
-    const switchTurns = () => {
-        // if(playerOne.turn === true) {
-        //     playerOne.turn = false
-        //     playerTwo.turn = true;
-        // } else if (playerTwo.turn === true) {
-        //     playerTwo.turn = false;
-        //     playerOne.turn = true
-        // }
-        playerOne.turn = !playerOne.turn;
-        playerTwo.turn = !playerTwo.turn;
+    const switchTurns = (clearIndicator) => {
+        if (clearIndicator) {
+            playerOne.turn = true;
+            playerTwo.turn = false;
+        } else {
+            playerOne.turn = !playerOne.turn;
+            playerTwo.turn = !playerTwo.turn;
+        }
     }
 
     const emptyGameBoardArray = () => {
@@ -95,7 +93,7 @@ let DisplayController = (function () {
 const clearButton = document.getElementById('clear');
 clearButton.addEventListener("click", () => {
     DisplayController.clearBoard();
-    Board.switchTurns();
+    Board.switchTurns(true);
     Board.emptyGameBoardArray();
 })
 

@@ -71,6 +71,7 @@ let Board = (function () {
         ];
 
         winningSpots.forEach(array => {
+            signCounter = 0;
             array.forEach( () => {
                 if(!gameOver) {
                     if (gameBoard[array[counter]] === currentPlayer.sign) {
@@ -80,8 +81,6 @@ let Board = (function () {
                             gameOver = true;
                             return;
                         }
-                    } else {
-                        signCounter = 0;
                     }
 
                     counter++;

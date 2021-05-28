@@ -1,16 +1,16 @@
+const Player = (name, sign, turn) => {
+    return {
+        name,
+        sign,
+        turn
+    }
+}
+
+let playerOne = Player("Miguel", "X", true);
+let playerTwo = Player("John", "O", false)
+
 let Board = (function () {
     let gameBoard = ["","","","","","","","","",];
-
-    const Player = (name, sign, turn) => {
-        return {
-            name,
-            sign,
-            turn
-        }
-    }
-    
-    let playerOne = Player("Miguel", "X", true);
-    let playerTwo = Player("John", "O", false);
 
     const setUp = () => {
         const tilesContainer = document.querySelector(".tiles_container");
@@ -46,10 +46,11 @@ let Board = (function () {
     return {
         gameBoard,
         setUp,
-        updateGameBoardArray
+        updateGameBoardArray,
+        switchTurns
     }
 
-})();
+})(playerOne, playerTwo);
 
 let DisplayController = (function () {
     const markTitle = (id, player) => {
@@ -64,11 +65,24 @@ let DisplayController = (function () {
         }
     }
 
+    const clearBoard = () => {
+        let tiles = document.querySelectorAll('.tile');
+
+        tiles.forEach(tile => {
+            tile.textContent = "";
+        });
+    }
+
     return {
-        markTitle
+        markTitle,
+        clearBoard
     }
 })();
 
-
+const clearButton = document.getElementById('clear');
+clearButton.addEventListener("click", () => {
+    DisplayController.clearBoard();
+    Board.switchTurns();
+})
 
 Board.setUp();

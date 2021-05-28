@@ -1,6 +1,17 @@
 let Board = (function () {
     let gameBoard = ["","","","","","","","","",];
 
+    const Player = (name, sign, turn) => {
+        return {
+            name,
+            sign,
+            turn
+        }
+    }
+    
+    let playerOne = Player("Miguel", "X", true);
+    let playerTwo = Player("John", "O", false);
+
     const setUp = () => {
         const tilesContainer = document.querySelector(".tiles_container");
 
@@ -9,7 +20,8 @@ let Board = (function () {
             tileElement.classList.add("tile");
             tileElement.id = i;
             tileElement.addEventListener("click", () => {
-                DisplayController.markTitle(tileElement.id);
+                DisplayController.markTitle(tileElement.id, playerOne.turn ? playerOne : playerTwo);
+                switchTurns();
             })
             tilesContainer.appendChild(tileElement)
         }
@@ -21,6 +33,16 @@ let Board = (function () {
         console.log(gameBoard);
     }
 
+    const switchTurns = () => {
+        if(playerOne.turn === true) {
+            playerOne.turn = false
+            playerTwo.turn = true;
+        } else if (playerTwo.turn === true) {
+            playerTwo.turn = false;
+            playerOne.turn = true
+        }
+    }
+
     return {
         gameBoard,
         setUp,
@@ -30,15 +52,15 @@ let Board = (function () {
 })();
 
 let DisplayController = (function () {
-    const markTitle = (id) => {
+    const markTitle = (id, player) => {
         let temporaryTitle = document.getElementById(`${id}`);
 
         if (temporaryTitle.textContent !== "") {
             console.log("Already filled");
             return;
         } else {
-            temporaryTitle.textContent = "X";
-            Board.updateGameBoardArray(temporaryTitle.id, "X");
+            temporaryTitle.textContent = player.sign;
+            Board.updateGameBoardArray(temporaryTitle.id, player.sign);
         }
     }
 
@@ -47,13 +69,6 @@ let DisplayController = (function () {
     }
 })();
 
-const Player =  (name, sign) => {
-    return {
-        name,
-        sign,
-        turn
-    }
-}
 
 
 Board.setUp();

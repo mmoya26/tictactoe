@@ -11,7 +11,6 @@ let playerTwo = Player("John", "O", false)
 
 let Board = (function () {
     let gameBoard = ["","","","","","","","","",];
-    let winner = false;
     let gameOver = false;
 
     const setUp = () => {
@@ -22,6 +21,10 @@ let Board = (function () {
             tileElement.classList.add("tile");
             tileElement.id = i;
             tileElement.addEventListener("click", () => {
+
+                // If game is over, don't allow players to click more tiles, so return
+                if(gameOver) return;
+                
                 /* If this method returns true it means that the correct sign was placed on the board and no turns
                     were lost. If the method  retuns false it means that the space was already filled thefore the turn 
                     should not be lost until the player picks and empty tile */
@@ -51,17 +54,9 @@ let Board = (function () {
         }
     }
 
-    const emptyGameBoardArray = () => {
-        gameBoard = ["","","","","","","","","",];
-        console.log("gameBoard array is now empty");
-        console.log(gameBoard);
-    }
-
     const checkWinCondition = () => {
         let currentPlayer = playerOne.turn ? playerOne : playerTwo;
         let signCounter = 0;
-        let allThree = false;
-        let winner = false;
         let counter = 0;
 
         const winningSpots = [
@@ -76,13 +71,12 @@ let Board = (function () {
         ];
 
         winningSpots.forEach(array => {
-            array.forEach(value => {
+            array.forEach( () => {
                 if(!gameOver) {
                     if (gameBoard[array[counter]] === currentPlayer.sign) {
                         signCounter++;
     
                         if (signCounter === 3) {
-                            winner = true;
                             gameOver = true;
                             return;
                         }
@@ -94,28 +88,19 @@ let Board = (function () {
 
                     if (counter === 3) counter = 0;
                 }
-                
-
-                // if(!gameOver) {
-                //     if (gameBoard[value] === currentPlayer.sign) {
-                //         winner = true;
-                //         signCounter++;
-                //         if( signCounter === 3) {
-                //             gameOver = true;
-                //             return;
-                //         }         
-                //     } else {
-                //         winner = false
-                //         signCounter = 0;
-                //     }  
-                // }
             });
         });
 
-        if(winner) {
-            alert("winner");
+        if(gameOver) {
+            DisplayController.alertWinner(currentPlayer);
             return;
         }
+    }
+
+    const resetGame = () => {
+        gameBoard = ["","","","","","","","","",];
+        gameOver = false;
+        switchTurns(true);
     }
 
     return {
@@ -123,8 +108,8 @@ let Board = (function () {
         setUp,
         updateGameBoardArray,
         switchTurns,
-        emptyGameBoardArray,
         checkWinCondition,
+        resetGame
     }
 
 })(playerOne, playerTwo);
@@ -151,17 +136,21 @@ let DisplayController = (function () {
         });
     }
 
+    const alertWinner = (player) => {
+        alert(`The winner is: ${player.name} Sign: ${player.sign}`);
+    }
+
     return {
         markTitle,
-        clearBoard
+        clearBoard,
+        alertWinner
     }
 })();
 
 const clearButton = document.getElementById('clear');
 clearButton.addEventListener("click", () => {
     DisplayController.clearBoard();
-    Board.switchTurns(true);
-    Board.emptyGameBoardArray();
+    Board.resetGame();
 })
 
 Board.setUp();

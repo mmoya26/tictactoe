@@ -8,20 +8,52 @@ let Board = (function () {
             let tileElement = document.createElement("div");
             tileElement.classList.add("tile");
             tileElement.id = i;
+            tileElement.addEventListener("click", () => {
+                DisplayController.markTitle(tileElement.id);
+            })
             tilesContainer.appendChild(tileElement)
         }
     };
 
+    const updateGameBoardArray = (id, sign) => {
+        gameBoard[id - 1] = sign;
+        console.log(`Array spot ${id - 1} has the value of: ${gameBoard[id - 1]}`);
+        console.log(gameBoard);
+    }
+
     return {
         gameBoard,
-        setUp
+        setUp,
+        updateGameBoardArray
     }
 
 })();
 
-// let displayController = (function () {
+let DisplayController = (function () {
+    const markTitle = (id) => {
+        let temporaryTitle = document.getElementById(`${id}`);
 
-// })();
+        if (temporaryTitle.textContent !== "") {
+            console.log("Already filled");
+            return;
+        } else {
+            temporaryTitle.textContent = "X";
+            Board.updateGameBoardArray(temporaryTitle.id, "X");
+        }
+    }
+
+    return {
+        markTitle
+    }
+})();
+
+const Player =  (name, sign) => {
+    return {
+        name,
+        sign,
+        turn
+    }
+}
 
 
 Board.setUp();

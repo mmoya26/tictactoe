@@ -60,6 +60,9 @@ let Board = (function () {
     const checkWinCondition = () => {
         let currentPlayer = playerOne.turn ? playerOne : playerTwo;
         let signCounter = 0;
+        let allThree = false;
+        let winner = false;
+        let counter = 0;
 
         const winningSpots = [
             [0,1,2],
@@ -75,18 +78,37 @@ let Board = (function () {
         winningSpots.forEach(array => {
             array.forEach(value => {
                 if(!gameOver) {
-                    if (gameBoard[value] === currentPlayer.sign) {
-                        winner = true;
+                    if (gameBoard[array[counter]] === currentPlayer.sign) {
                         signCounter++;
-                        if( signCounter === 3) {
+    
+                        if (signCounter === 3) {
+                            winner = true;
                             gameOver = true;
                             return;
-                        }         
+                        }
                     } else {
-                        winner = false
                         signCounter = 0;
-                    }  
+                    }
+
+                    counter++;
+
+                    if (counter === 3) counter = 0;
                 }
+                
+
+                // if(!gameOver) {
+                //     if (gameBoard[value] === currentPlayer.sign) {
+                //         winner = true;
+                //         signCounter++;
+                //         if( signCounter === 3) {
+                //             gameOver = true;
+                //             return;
+                //         }         
+                //     } else {
+                //         winner = false
+                //         signCounter = 0;
+                //     }  
+                // }
             });
         });
 

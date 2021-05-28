@@ -39,20 +39,27 @@ let Board = (function () {
     }
 
     const switchTurns = () => {
-        if(playerOne.turn === true) {
-            playerOne.turn = false
-            playerTwo.turn = true;
-        } else if (playerTwo.turn === true) {
-            playerTwo.turn = false;
-            playerOne.turn = true
-        }
+        // if(playerOne.turn === true) {
+        //     playerOne.turn = false
+        //     playerTwo.turn = true;
+        // } else if (playerTwo.turn === true) {
+        //     playerTwo.turn = false;
+        //     playerOne.turn = true
+        // }
+        playerOne.turn = !playerOne.turn;
+        playerTwo.turn = !playerTwo.turn;
+    }
+
+    const emptyGameBoardArray = () => {
+        gameBoard = ["","","","","","","","","",];
     }
 
     return {
         gameBoard,
         setUp,
         updateGameBoardArray,
-        switchTurns
+        switchTurns,
+        emptyGameBoardArray
     }
 
 })(playerOne, playerTwo);
@@ -89,6 +96,7 @@ const clearButton = document.getElementById('clear');
 clearButton.addEventListener("click", () => {
     DisplayController.clearBoard();
     Board.switchTurns();
+    Board.emptyGameBoardArray();
 })
 
 Board.setUp();

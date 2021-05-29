@@ -71,23 +71,9 @@ let Board = (function () {
         ];
 
         winningSpots.forEach(array => {
-            signCounter = 0;
-            array.forEach( () => {
-                if(!gameOver) {
-                    if (gameBoard[array[counter]] === currentPlayer.sign) {
-                        signCounter++;
-    
-                        if (signCounter === 3) {
-                            gameOver = true;
-                            return;
-                        }
-                    }
-
-                    counter++;
-
-                    if (counter === 3) counter = 0;
-                }
-            });
+            if(gameBoard[array[0]] === currentPlayer.sign && gameBoard[array[1]] === currentPlayer.sign && gameBoard[array[2]] === currentPlayer.sign) {
+                gameOver = true;
+            }
         });
 
         if(gameOver) {
@@ -136,8 +122,15 @@ let DisplayController = (function () {
     }
     
     const removeWinnerHeading = () => {
-        let winnerHeader = document.getElementById("winner");
-        document.body.removeChild(winnerHeader);
+        // FIX!
+        let body = document.body;
+        let message = document.getElementById("winner");
+
+        if (message) {
+            body.removeChild(message);
+        } else {
+            return;
+        }
     }
 
     const displayWinner = (player) => {

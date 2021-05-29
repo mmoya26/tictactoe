@@ -1,13 +1,12 @@
-const Player = (name, sign, turn) => {
+const Player =  (sign, turn) => {
     return {
-        name,
         sign,
         turn
     }
 }
 
-let playerOne = Player("Miguel", "X", true);
-let playerTwo = Player("John", "O", false)
+let playerOne = Player("X", true);
+let playerTwo = Player("O", false)
 
 let Board = (function () {
     let gameBoard = ["","","","","","","","","",];
@@ -30,7 +29,14 @@ let Board = (function () {
                     should not be lost until the player picks and empty tile */
                 if (DisplayController.markTitle(tileElement.id, playerOne.turn ? playerOne : playerTwo)) {
                     checkWinCondition();
-                    switchTurns(false);       
+
+                    if (gameOver) {
+                        DisplayController.clearPlayerTurnMessage();
+                        return;
+                    }
+
+                    switchTurns(false);
+                    DisplayController.changePlayerTurnMessage(playerOne.turn ? playerOne : playerTwo);   
                 }
                 return;
             })
@@ -40,8 +46,6 @@ let Board = (function () {
 
     const updateGameBoardArray = (id, sign) => {
         gameBoard[id - 1] = sign;
-        console.log(`Array spot ${id - 1} has the value of: ${gameBoard[id - 1]}`);
-        console.log(gameBoard);
     }
 
     const switchTurns = (clearIndicator) => {
@@ -56,8 +60,6 @@ let Board = (function () {
 
     const checkWinCondition = () => {
         let currentPlayer = playerOne.turn ? playerOne : playerTwo;
-        let signCounter = 0;
-        let counter = 0;
 
         const winningSpots = [
             [0,1,2],
@@ -76,8 +78,14 @@ let Board = (function () {
             }
         });
 
+        let draw = gameBoard.every(sign => sign !== "");
+
         if(gameOver) {
             DisplayController.displayWinner(currentPlayer);
+            return;
+        } else if (draw) {
+            DisplayController.displayWinner(null);
+            gameOver = true;
             return;
         }
     }
@@ -122,7 +130,6 @@ let DisplayController = (function () {
     }
     
     const removeWinnerHeading = () => {
-        // FIX!
         let body = document.body;
         let message = document.getElementById("winner");
 
@@ -136,15 +143,38 @@ let DisplayController = (function () {
     const displayWinner = (player) => {
         let winnerHeader = document.createElement("h3");
         winnerHeader.id = "winner";
-        winnerHeader.textContent = `Winner: ${player.name}`;
+        
+        if (player) {
+            winnerHeader.textContent = `Winner: Player ${player.sign === "X" ? 1 : 2} (${player.sign})`;
+        } else {
+            winnerHeader.textContent = `It is a draw!`;
+        }
+
         document.body.appendChild(winnerHeader);
+    }
+
+    const changePlayerTurnMessage = (player) => {
+        let heading = document.getElementById("turn");
+
+        if(player) {
+            heading.textContent = `Player ${player.sign === 'X' ? 1 : 2} (${player.sign}) Turn`;
+        } else {
+            heading.textContent = `Player 1 (X) Turn`;
+        }
+    }
+
+    const clearPlayerTurnMessage = () => {
+        let heading = document.getElementById("turn");
+        heading.textContent = "";
     }
 
     return {
         markTitle,
         clearBoard,
         displayWinner,
-        removeWinnerHeading
+        removeWinnerHeading,
+        changePlayerTurnMessage,
+        clearPlayerTurnMessage
     }
 })();
 
@@ -153,6 +183,7 @@ clearButton.addEventListener("click", () => {
     DisplayController.clearBoard();
     DisplayController.removeWinnerHeading();
     Board.resetGame();
+    DisplayController.changePlayerTurnMessage();
 })
 
 Board.setUp();

@@ -84,6 +84,8 @@ let Board = (function () {
             DisplayController.displayWinner(currentPlayer);
             return;
         } else if (draw) {
+            /* When passing null to displayWinner() it means that the game has been a draw
+            therefore the method should not expected a player as usual */
             DisplayController.displayWinner(null);
             gameOver = true;
             return;
